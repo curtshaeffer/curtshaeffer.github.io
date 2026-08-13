@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avatar: The Last Airbender Trivia</title>
+
+<!--
+  Single-page trivia app: HTML, CSS, and JS all in this one file.
+  61 questions, each with 4 answer choices and one correct answer.
+  Built by Heber Shaeffer.
+-->
+
+<style>
+  :root{
+    --bg: #f7f7f5;
+    --card: #ffffff;
+    --ink: #1c1c1c;
+    --muted: #6b6b6b;
+    --border: #e2e2e0;
+    --accent: #1c6ea4;
+    --accent-dark: #14507a;
+    --correct: #2e7d32;
+    --correct-bg: #e8f5e9;
+    --incorrect: #c0392b;
+    --incorrect-bg: #fdecea;
+  }
+
+  * { box-sizing: border-box; }
+
+  body{
+    margin: 0;
+    padding: 2.5rem 1.25rem;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+  }
+
+  .app{
+    width: 100%;
+    max-width: 560px;
+  }
+
+  header{
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  h1{
+    font-size: 1.5rem;
+    margin: 0 0 0.25rem;
+  }
+
+  header p{
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .scoreboard{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 0 0.5rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .score{
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .progress-track{
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+
+  .progress-fill{
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.25s ease;
+  }
+
+  .card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+  }
+
+  .question-label{
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 0.5rem;
+  }
+
+  .question-text{
+    font-size: 1.15rem;
+    line-height: 1.4;
+    margin: 0 0 1.5rem;
+  }
+
+  .options{
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .option-btn{
+    text-align: left;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    border-radius: 0.5rem;
+    font-size: 0.98rem;
+    color: var(--ink);
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .option-btn:hover:not(:disabled){
+    border-color: var(--accent);
+  }
+
+  .option-btn:disabled{
+    cursor: default;
+  }
+
+  .option-btn.correct{
+    border-color: var(--correct);
+    background: var(--correct-bg);
+    color: var(--correct);
+    font-weight: 600;
+  }
+
+  .option-btn.incorrect{
+    border-color: var(--incorrect);
+    background: var(--incorrect-bg);
+    color: var(--incorrect);
+    font-weight: 600;
+  }
+
+  .next-btn, .restart-btn{
+    display: block;
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.85rem 1rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .next-btn:hover, .restart-btn:hover{
+    background: var(--accent-dark);
+  }
+
+  .results{
+    text-align: center;
+  }
+
+  .results h2{
+    margin-top: 0;
+  }
+
+  .results .final-score{
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0.5rem 0;
+  }
+
+  .results p{
+    color: var(--muted);
+  }
+
+  .hidden{
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header>
+    <h1>Avatar: The Last Airbender Trivia</h1>
+    <p>61 questions. One right answer each. No cheating with the Spirit World.</p>
+  </header>
+
+  <div class="scoreboard">
+    <span id="questionLabel">Question 1 of 61</span>
+    <span>Score: <span class="score" id="scoreDisplay">0</span></span>
+  </div>
+
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Quiz card -->
+  <div class="card" id="quizCard">
+    <p class="question-text" id="questionText"></p>
+    <div class="options" id="optionsContainer"></div>
+    <button class="next-btn hidden" id="nextBtn">Next Question</button>
+  </div>
+
+  <!-- Results card (hidden until the quiz ends) -->
+  <div class="card results hidden" id="resultsCard">
+    <h2>Quiz complete!</h2>
+    <div class="final-score" id="finalScoreText"></div>
+    <p id="finalMessage"></p>
+    <button class="restart-btn" id="restartBtn">Play Again</button>
+  </div>
+
+</div>
+
+<script>
+  // ---------------------------------------------------------------
+  // 1. QUESTION BANK
+  // ---------------------------------------------------------------
+  const QUESTIONS = [
+    { q: "What is the first question Aang asks Katara?", options: ["Can you help me catch a fish?", "Will you go penguin sledding with me?", "Will you teach me how to catch a penguin?", "Where are we?"], answer: "Will you go penguin sledding with me?" },
+    { q: "How does Aang beat Zuko on his warship, allowing him to escape on Appa?", options: ["By deflecting Zuko and Iroh's attack and covering the warship in snow", "By going into the Avatar state and overpowering him with water bending", "By using advanced airbending techniques that render Zuko powerless", "By freezing the water on the ship, preventing Zuko and his soldiers from moving around"], answer: "By deflecting Zuko and Iroh's attack and covering the warship in snow" },
+    { q: "What is Uncle Iroh's favorite type of tea?", options: ["Jasmine Tea", "Lily Tea", "White Lotus Tea", "Ginseng Tea"], answer: "Ginseng Tea" },
+    { q: "How does Sokka spend most of his time on Kyoshi Island?", options: ["Eating all of the village's food", "Trying to ride the Unagi with Aang", "Training with Suki, learning how to fight like one of their warriors", "Helping the Elder distribute clothes and supplies to the villagers"], answer: "Training with Suki, learning how to fight like one of their warriors" },
+    { q: "What is the secret of Genomite, the climbing rock that Sokka and Katara were covered in by Bumi?", options: ["It dissolves in water", "It's made of rock candy", "Tapping on it twice makes it crumble", "All the coin in the Earth Kingdom is made of Genomite"], answer: "It's made of rock candy" },
+    { q: "Why did Haru, the Earthbender kid the group meets, get arrested by the Fire Nation soldiers?", options: ["The Fire Nation soldiers saw him Earthbending", "Haru attacked the Fire Nation soldiers after they threatened his mom", "The old man that Katara and Haru saved turned him in for Earthbending", "He led the failed resistance against the Fire Nation soldiers in the village"], answer: "The Fire Nation soldiers saw him Earthbending" },
+    { q: "What animal form did the Hei Bai spirit turn into?", options: ["A Panda", "A Monkey", "A Wolf", "A Lion"], answer: "A Panda" },
+    { q: "Which Avatar did Aang meet during the Winter Solstice?", options: ["Avatar Kyoshi", "Avatar Roku", "Avatar Kuruk", "Avatar Yangchen"], answer: "Avatar Roku" },
+    { q: "What did Aang buy in the market that caused Katara to take the money pouch from him?", options: ["A bison whistle", "A fancy new hat", "A waterbending scroll", "A Sungi horn"], answer: "A bison whistle" },
+    { q: "What did Sokka discover about Jet?", options: ["Jet planned to destroy an Earth Kingdom town", "Jet was actually a Firebender", "Jet was planning on betraying Aang to the Fire Nation", "Jet's mother was from the Northern Water Tribe"], answer: "Jet planned to destroy an Earth Kingdom town" },
+    { q: "What was the \"true\" story of the Gan Jin and Zhang Tribe ancestors that Aang revealed?", options: ["The Zhang ambushed the Gan Jin ancestor and stole their sacred orb", "The Zhang ancestor was returning the Gan Jin's sacred orb and was wrongfully punished by them", "The Gan Jin and Zhang Tribe ancestors were actually husband and wife leaders of one single tribe", "The two ancestors were eight-year-old twins who were playing a ball game called Redemption"], answer: "The two ancestors were eight-year-old twins who were playing a ball game called Redemption" },
+    { q: "Why was Zuko challenged to an Agni Kai by his father when he was a kid?", options: ["He attacked his sister, Azula, in front of his father", "He spoke out against a general's plan during a war council", "He disobeyed his father in front of common citizens", "Azula claimed to Ozai that Zuko wanted the throne for himself"], answer: "He spoke out against a general's plan during a war council" },
+    { q: "What was the name of Zuko's alias when he rescued Aang from prison?", options: ["The Green Spirit", "The Red Spirit", "The Blue Spirit", "The Black Spirit"], answer: "The Blue Spirit" },
+    { q: "What was the danger that the town of Aunt Wu, the fortuneteller, was facing?", options: ["A tsunami was fast approaching", "A tornado was coming to destroy the town", "A hurricane was about to make landfall near the town", "A volcano was soon to erupt close to the town"], answer: "A volcano was soon to erupt close to the town" },
+    { q: "What power did June the Bounty Hunter's mount, Nyla, have?", options: ["A toxic tongue that paralyzes", "Natural Earthbending abilities", "It could emit poisonous gas from its mouth", "Natural Waterbending abilities"], answer: "A toxic tongue that paralyzes" },
+    { q: "What made Jeong Jeong, the Deserter, finally agree to teach Aang firebending?", options: ["He saw Aang's potential in firebending as soon as he walked into his tent", "Aang convinced him by telling him about Sozin's comet", "Avatar Roku came to him in a vision and told him to train Aang", "Katara told Jeong Jeong that Aang needs to learn firebending to save the world"], answer: "Avatar Roku came to him in a vision and told him to train Aang" },
+    { q: "What secret did Aang discover in the Northern Air Temple?", options: ["He found out that Teo's father was developing weapons for the Fire Nation", "He found a hidden sect of Airbenders", "The Fire Nation had taken over the temple and were using it as a training ground", "He found the last air bison colony"], answer: "He found out that Teo's father was developing weapons for the Fire Nation" },
+    { q: "Why was Katara disappointed when she first got to the Northern Water Tribe?", options: ["Master Pakku wouldn't accept her as a waterbending student", "Her waterbending skills were called mediocre by Master Pakku", "Her father was nowhere to be found when she arrived there", "Aang began to show more attention to Princess Yue than to her"], answer: "Master Pakku wouldn't accept her as a waterbending student" },
+    { q: "What did Katara and Aang find in the most spiritual place in the North Pole?", options: ["A garden oasis", "A spirit master", "It was destroyed by the Fire Nation when they got there", "A single flame"], answer: "A garden oasis" },
+    { q: "What was unique about the spirit named Koh?", options: ["He stole faces if shown any emotion", "He was a giant spider", "He talked in riddles", "He smoked a pipe on top of a mushroom"], answer: "He stole faces if shown any emotion" },
+    { q: "What is Azula's nickname for Zuko?", options: ["Zeze", "Zaza", "Zozo", "Zuzu"], answer: "Zuzu" },
+    { q: "Who is revealed to be the very first Earthbenders?", options: ["The founders of Omashu", "The founders of Ba Sing Se", "Badgermoles", "Lion-Turtles"], answer: "Badgermoles" },
+    { q: "What is the key to Earthbending?", options: ["Neutral Jing - Listening and Waiting", "Positive Jing - Attacking", "Negative Jing - Retreating", "Nen Jing - Feeling the Aura of the world"], answer: "Neutral Jing - Listening and Waiting" },
+    { q: "Who did Sokka think he saw in the swamp?", options: ["His mom", "His dad", "Yue", "Suki"], answer: "Yue" },
+    { q: "Which Avatar was accused of murder on Avatar Day?", options: ["Avatar Roku", "Avatar Kyoshi", "Avatar Kuruk", "Avatar Yangchen"], answer: "Avatar Kyoshi" },
+    { q: "What was Toph's fighter name in Earth Rumble 6?", options: ["The Blind Bandit", "The Goddess of Stone", "The Seeing Stone", "The Blind Boulder"], answer: "The Blind Bandit" },
+    { q: "What was the punishment Fire Lord Azulon gave Ozai for his suggestion to betray Iroh?", options: ["Stripping of his title of prince", "Perform an Agni Kai against Ursa, his own wife", "Banishment to Ember Island", "An order to kill his first born son, Zuko"], answer: "An order to kill his first born son, Zuko" },
+    { q: "How did Azula and her team keep finding the group?", options: ["They could hear Katara and Toph arguing", "Appa's shedded hair", "They followed Appa by watching him fly in the air", "They had information the group was heading to Ba Sing Se"], answer: "Appa's shedded hair" },
+    { q: "What advanced firebending technique did Iroh try to teach Zuko after getting beat by Azula?", options: ["How to make his fire blue", "How to make pinpoint explosions", "Amaterasu, or eternal black flame", "How to redirect lightning"], answer: "How to redirect lightning" },
+    { q: "What type of creature guarded Wan Shi Tong's Library?", options: ["A giant toad", "A giant fox", "A giant owl", "A giant raccoon"], answer: "A giant owl" },
+    { q: "What secret society is Iroh a member of?", options: ["The White Lotus", "The Black Lily", "The Purple Rose", "The Silver Daisy"], answer: "The White Lotus" },
+    { q: "What did Ying, the pregnant woman who was helped through Serpent's Pass, name her baby daughter?", options: ["Serenity", "Peace", "Joy", "Hope"], answer: "Hope" },
+    { q: "How did Aang defeat the giant drill attacking Ba Sing Se?", options: ["By attacking its pressure points from the inside", "By creating Earthbended spikes underneath it, stopping it in its tracks", "By going into the Avatar State and overwhelming it with his power", "By smashing it with a giant boulder created by his Earthbending"], answer: "By attacking its pressure points from the inside" },
+    { q: "Where did Iroh and Zuko get a job in Ba Sing Se?", options: ["A flower shop", "A tea shop", "A Pai Sho shop", "A weapon shop"], answer: "A tea shop" },
+    { q: "What was the song Iroh sang to honor his son?", options: ["\"Leaves from the Vine\"", "\"Kiss from a Rose\"", "\"A Song for my Son\"", "\"Happy Birthday\""], answer: "\"Leaves from the Vine\"" },
+    { q: "Which of Team Avatar's friends helped Appa when he was taken?", options: ["Iroh", "Suki", "Bato", "Yue"], answer: "Suki" },
+    { q: "Where do the Dai Li take people to get brainwashed?", options: ["Lake Laogai", "Lake Omashu", "Lake Mushi", "Lake Joo Dee"], answer: "Lake Laogai" },
+    { q: "How did Azula, Ty Lee, and Mai successfully infiltrate the Earth King's palace in Ba Sing Se?", options: ["They came as emissaries of the Fire Nation", "They snuck underground into the palace", "They posed as Kyoshi Warriors", "They acted as attendants to the king"], answer: "They posed as Kyoshi Warriors" },
+    { q: "How did Toph escape her captors?", options: ["She knocked her captors unconscious with earthbending", "She invented Metalbending", "She escaped after convincing her captors to let her go to the bathroom", "She capsized the cart she was being transported on"], answer: "She invented Metalbending" },
+    { q: "How did Aang get injured at the end of the battle in the crystal cave?", options: ["He stabbed his spine on a pointy rock", "He was electrocuted by Azula's lightning in the Avatar State", "Zuko's firebending attack caught him off guard", "He attempted to intercept Azula's attack on Katara but got hit instead"], answer: "He was electrocuted by Azula's lightning in the Avatar State" },
+    { q: "What lie did Azula tell Fire Lord Ozai on their return to the Fire Nation?", options: ["That Zuko killed the Avatar in Ba Sing Se", "That she let the Avatar escape Ba Sing Se", "That there was no invasion plan on the day of the Eclipse", "That Zuko planned on making an attempt on the throne"], answer: "That Zuko killed the Avatar in Ba Sing Se" },
+    { q: "How did Aang teach the Fire Nation kids to have fun?", options: ["He threw them a dance party", "He showed them a new game they could play", "He threw a karaoke party", "He organized a massive prank on the headmaster"], answer: "He threw them a dance party" },
+    { q: "What was the alter ego Katara took to help the small Fire Nation fishing village?", options: ["The Prodigal Woman", "The Moon Woman", "The Painted Lady", "The Water Witch"], answer: "The Painted Lady" },
+    { q: "What material did Sokka use to make his sword?", options: ["Gold", "Platinum", "Meteorite", "Jade"], answer: "Meteorite" },
+    { q: "While on Ember Island, who did Zuko reveal he was most angry with?", options: ["Iroh", "Ozai", "Azula", "Himself"], answer: "Himself" },
+    { q: "How did Avatar Roku die?", options: ["Killed by an erupting volcano after being betrayed by Sozin", "Killed in a battle against Fire Lord Sozin during the day of the Comet", "Died trying to prevent a war in the Earth Kingdom during the formation of Ba Sing Se", "Died of old age in his house, surrounded by loved ones"], answer: "Killed by an erupting volcano after being betrayed by Sozin" },
+    { q: "What was the nickname Toph was given after she became a scammer?", options: ["The Blind Banshee", "The Grey Fox", "The Runaway", "The Imposter"], answer: "The Runaway" },
+    { q: "What was Hama the Innkeeper's secret?", options: ["She was a secret Earthbender", "She was little Nini from Katara's ghost story", "She kidnapped people with Bloodbending", "She knew where Zuko's mom was located"], answer: "She kidnapped people with Bloodbending" },
+    { q: "Who did Aang see in every one of his nightmares?", options: ["Monk Gyatso", "Avatar Roku", "Fire Lord Ozai", "Azula"], answer: "Fire Lord Ozai" },
+    { q: "What special way did Aang say goodbye to Katara on the Day of the Invasion?", options: ["He gave her a hug.", "He kissed her.", "He gave her a handshake.", "He bowed to her to show respect as his master."], answer: "He kissed her." },
+    { q: "How did Ozai convince Zuko to stay and talk right before the Eclipse ended?", options: ["He asked Zuko if he wanted to know what happened to his mom.", "He asked Zuko if he wanted to know why he hated him all those years.", "He asked Zuko if he wanted to know why he made Iroh go with him to hunt the Avatar.", "He asked Zuko if he wanted to know his real plans for Sozin's Comet."], answer: "He asked Zuko if he wanted to know what happened to his mom." },
+    { q: "Who was the first member of the group to give Zuko a chance after he tried to befriend them at the Air Temple?", options: ["Aang", "Sokka", "Katara", "Toph"], answer: "Toph" },
+    { q: "What was the name of the Firebending form Zuko and Aang learned at the Sun Warrior Temple?", options: ["The Dragon Reborn", "The Dancing Dragon", "The Flaming Dragon", "The Relentless Dragon"], answer: "The Dancing Dragon" },
+    { q: "How did Zuko respond to Sokka telling him about Yue turning into the moon?", options: ["\"I'm sorry, Sokka.\"", "\"You're joking. The moon?\"", "\"That's rough, buddy.\"", "\"Wow, that's crazy.\""], answer: "\"That's rough, buddy.\"" },
+    { q: "Who captured the warden during the group's escape from Boiling Rock?", options: ["Zuko", "Suki", "Sokka", "Katara"], answer: "Suki" },
+    { q: "What was the name of the group who killed Katara's mom?", options: ["The Rough Rhinos", "The Equalists", "The Southern Raiders", "The Uruk-hai"], answer: "The Southern Raiders" },
+    { q: "What made Aang stop watching the Ember Island Players' play?", options: ["He wanted to get fire gummies from concessions.", "He felt hurt when fake Katara said he's like a little brother to her.", "He didn't like that he was played by a girl.", "He was too embarrassed watching himself on the stage."], answer: "He felt hurt when fake Katara said he's like a little brother to her." },
+    { q: "What title did Ozai give himself as the Supreme Leader of the New World?", options: ["The Phoenix King", "The Immortal Dragon", "The God Emperor", "The Dragon King"], answer: "The Phoenix King" },
+    { q: "From what creature did Aang learn the secret Avatar technique of Energybending?", options: ["A chimera", "A Dragon-crab", "A Lion-turtle", "A Rhino-monkey"], answer: "A Lion-turtle" },
+    { q: "Why did Azula banish the Dai Li?", options: ["They plotted with the Earth King to overthrow Azula as Fire Lord.", "They took five minutes to get to her after she called for them.", "They disagreed with an order she gave them.", "They refused to change their uniform to Fire Nation colors."], answer: "They took five minutes to get to her after she called for them." },
+    { q: "What was Aang's final judgement on Fire Lord Ozai?", options: ["He decided to kill Fire Lord Ozai once and for all, using all the elements at once.", "He decided to paralyze Fire Lord Ozai, but keep him alive.", "He decided to amputate Fire Lord Ozai's arms and legs, but keep him alive.", "He decided to take away Fire Lord Ozai's Firebending by using Energybending."], answer: "He decided to take away Fire Lord Ozai's Firebending by using Energybending." }
+  ];
+
+  // ---------------------------------------------------------------
+  // 2. STATE
+  // ---------------------------------------------------------------
+  let order = [];       // shuffled question indices for this playthrough
+  let current = 0;      // position within `order`
+  let score = 0;
+  let answered = false;
+
+  const quizCard = document.getElementById('quizCard');
+  const resultsCard = document.getElementById('resultsCard');
+  const questionText = document.getElementById('questionText');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const nextBtn = document.getElementById('nextBtn');
+  const restartBtn = document.getElementById('restartBtn');
+  const scoreDisplay = document.getElementById('scoreDisplay');
+  const questionLabel = document.getElementById('questionLabel');
+  const progressFill = document.getElementById('progressFill');
+  const finalScoreText = document.getElementById('finalScoreText');
+  const finalMessage = document.getElementById('finalMessage');
+
+  // ---------------------------------------------------------------
+  // 3. HELPERS
+  // ---------------------------------------------------------------
+  function shuffle(array){
+    const a = array.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function startQuiz(){
+    order = shuffle(QUESTIONS.map((_, i) => i));
+    current = 0;
+    score = 0;
+    answered = false;
+    scoreDisplay.textContent = score;
+    resultsCard.classList.add('hidden');
+    quizCard.classList.remove('hidden');
+    renderQuestion();
+  }
+
+  function renderQuestion(){
+    answered = false;
+    nextBtn.classList.add('hidden');
+
+    const qIndex = order[current];
+    const question = QUESTIONS[qIndex];
+
+    questionLabel.textContent = `Question ${current + 1} of ${QUESTIONS.length}`;
+    progressFill.style.width = `${(current / QUESTIONS.length) * 100}%`;
+    questionText.textContent = question.q;
+
+    const shuffledOptions = shuffle(question.options);
+    optionsContainer.innerHTML = '';
+
+    shuffledOptions.forEach(optionText => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = optionText;
+      btn.addEventListener('click', () => selectAnswer(btn, optionText, question.answer));
+      optionsContainer.appendChild(btn);
+    });
+  }
+
+  function selectAnswer(button, chosenText, correctText){
+    if (answered) return;
+    answered = true;
+
+    const allButtons = optionsContainer.querySelectorAll('.option-btn');
+    allButtons.forEach(btn => {
+      btn.disabled = true;
+      if (btn.textContent === correctText) {
+        btn.classList.add('correct');
+      } else if (btn === button) {
+        btn.classList.add('incorrect');
+      }
+    });
+
+    if (chosenText === correctText) {
+      score++;
+      scoreDisplay.textContent = score;
+    }
+
+    nextBtn.classList.remove('hidden');
+  }
+
+  function nextQuestion(){
+    current++;
+    if (current >= order.length) {
+      showResults();
+    } else {
+      renderQuestion();
+    }
+  }
+
+  function showResults(){
+    progressFill.style.width = '100%';
+    quizCard.classList.add('hidden');
+    resultsCard.classList.remove('hidden');
+
+    const total = QUESTIONS.length;
+    const pct = Math.round((score / total) * 100);
+    finalScoreText.textContent = `${score} / ${total}`;
+
+    let message;
+    if (pct === 100) message = "Perfect score. You've clearly seen every episode more than once.";
+    else if (pct >= 80) message = "Great job — you know your Four Nations lore.";
+    else if (pct >= 50) message = "Solid effort. Time for a rewatch, maybe.";
+    else message = "Might be time to start from Book One again.";
+    finalMessage.textContent = `${pct}% correct. ${message}`;
+  }
+
+  // ---------------------------------------------------------------
+  // 4. EVENTS
+  // ---------------------------------------------------------------
+  nextBtn.addEventListener('click', nextQuestion);
+  restartBtn.addEventListener('click', startQuiz);
+
+  startQuiz();
+</script>
+</body>
+</html>
