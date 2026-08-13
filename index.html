@@ -3,314 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heber Shaeffer — Portfolio</title>
-  <meta name="description" content="Portfolio and resume of Heber Shaeffer, Pre-business student.">
+  <title>Heber Shaeffer</title>
 
-  <!-- Bootstrap 5 (CDN) -->
+  <!-- Bootstrap CSS (this is what makes the site look professional without a lot of custom CSS) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons (used for the social links in the footer) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- Google Fonts: Space Grotesk (headings), Inter (body), IBM Plex Mono (labels/eyebrows) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-  <!-- Small amount of custom CSS layered on top of Bootstrap. This is fine —
-       only the from-scratch page needs to avoid Bootstrap entirely. -->
-  <style>
-    :root{
-      --ink:#14161f;
-      --muted:#5b5f73;
-      --paper:#f3f4f7;
-      --card:#ffffff;
-      --accent:#2f4cd1;
-      --accent-soft:#e7eaf6;
-      --gold:#c9862f;
-      --hairline:#dcdfe8;
-    }
-    body{
-      background:var(--paper);
-      color:var(--ink);
-      font-family:'Inter', system-ui, sans-serif;
-    }
-    h1,h2,h3,.brand{
-      font-family:'Space Grotesk', sans-serif;
-      letter-spacing:-0.01em;
-    }
-    .eyebrow{
-      font-family:'IBM Plex Mono', monospace;
-      font-size:.78rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
-    a{ color:var(--accent); }
-    a:hover{ color:#213aa8; }
-
-    .navbar{
-      background:rgba(243,244,247,.92);
-      backdrop-filter:blur(6px);
-      border-bottom:1px solid var(--hairline);
-    }
-    .navbar-brand{ font-weight:700; color:var(--ink)!important; }
-    .nav-link{ color:var(--ink)!important; font-weight:500; }
-    .nav-link.active{ color:var(--accent)!important; }
-
-    .hero{
-      padding:6.5rem 0 4rem;
-      border-bottom:1px solid var(--hairline);
-    }
-    .hero h1{
-      font-size:clamp(2.6rem, 6vw, 4.2rem);
-      font-weight:700;
-      line-height:1.05;
-      margin-bottom:1rem;
-    }
-    .hero .role{
-      font-size:1.25rem;
-      color:var(--muted);
-      max-width:40rem;
-    }
-    .btn-accent{
-      background:var(--accent); border-color:var(--accent); color:#fff;
-      font-weight:600;
-    }
-    .btn-accent:hover{ background:#213aa8; border-color:#213aa8; color:#fff; }
-    .btn-outline-accent{
-      border-color:var(--accent); color:var(--accent); font-weight:600;
-    }
-    .btn-outline-accent:hover{ background:var(--accent); color:#fff; }
-
-    section{ padding:4rem 0; }
-    .hairline{ border-top:1px solid var(--hairline); }
-
-    .card-clean{
-      background:var(--card);
-      border:1px solid var(--hairline);
-      border-radius:.5rem;
-      padding:1.75rem;
-      height:100%;
-    }
-    .card-clean .bi{ color:var(--accent); font-size:1.5rem; }
-
-    .chip{
-      display:inline-block;
-      font-family:'IBM Plex Mono', monospace;
-      font-size:.8rem;
-      padding:.3rem .65rem;
-      border-radius:2rem;
-      background:var(--accent-soft);
-      color:var(--accent);
-      margin:.2rem .3rem .2rem 0;
-    }
-
-    .profile-photo{
-      width:100%;
-      max-width:280px;
-      aspect-ratio:1/1;
-      object-fit:cover;
-      border-radius:.75rem;
-      border:1px solid var(--hairline);
-    }
-
-    footer{
-      border-top:1px solid var(--hairline);
-      padding:2.5rem 0;
-      color:var(--muted);
-      font-size:.9rem;
-    }
-    footer a{ color:var(--muted); font-size:1.3rem; margin-right:1rem; }
-    footer a:hover{ color:var(--accent); }
-  </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-md fixed-top">
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-      <a class="navbar-brand" href="index.html">Jordan Avery</a>
+      <a class="navbar-brand" href="index.html">Heber Shaeffer</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="resume.html">Résumé</a></li>
-          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="resume.html">Resume</a></li>
+          <li class="nav-item"><a class="nav-link" href="scratch.html">From-scratch Page</a></li>
         </ul>
       </div>
     </div>
   </nav>
-
-  <!-- ============== HERO ============== -->
-  <header class="hero" style="margin-top:56px;">
+  <div class="bg-primary text-white text-center py-5">
     <div class="container">
-      <div class="row align-items-center g-5">
-        <div class="col-lg-8">
-          <div class="eyebrow mb-3">Portfolio — Computer Science, Class of 2027</div>
-          <h1>Jordan Avery</h1>
-          <p class="role">
-            <!-- CUSTOMIZE ME: your one-line pitch. Say what you study and
-                 what kind of work you're looking for or proud of. -->
-            
-            Business oriented student pursuing a career in entreprenurship and sales. I have a great passion for creating something of my own where I can also serve and benefit others. I am currently a profesional, licensed life insurance broker, looking to grow a team to 100k a month in commision.
-          </p>
-          <div class="mt-4">
-            <a href="resume.html" class="btn btn-accent px-4 py-2 me-2">View my résumé</a>
-            <a href="#projects" class="btn btn-outline-accent px-4 py-2">See what I've built</a>
-          </div>
+      <h1 class="display-4">Heber Shaeffer</h1>
+      <p class="lead">Pre-Business Student at Brigham Young University</p>
+      <p>Profesional Sales Manager and Entrepreneur</p>
+    </div>
+  </div>
+  <div class="container my-5">
+    <div class="row align-items-center">
+      <div class="col-md-4 text-center mb-4 mb-md-0">
+        <img src="https://mail.google.com/mail/u/0?ui=2&ik=622ac15d4b&attid=0.1&permmsgid=msg-a:r6709477238075013193&th=19fcf45d389462dd&view=fimg&fur=ip&permmsgid=msg-a:r6709477238075013193&sz=s0-l75-ft&attbid=ANGjdJ-SqVDyVEiqRanB8I6a7ndG9awYjPNxUKPzLo-w5LE2-AIMujKfmGT7hgmQwtYkVEhW2UJYPjncBc3JPpK2Vbxxk_-k1xQsGvfzC6kZG31jlcMOimGSRgkZW5c&disp=emb&realattid=ii_19fcf45c75cf1e709e91&zw" class="img-fluid rounded-circle" alt="Photo of Heber Shaeffer">
+      </div>
+      <div class="col-md-8">
+        <h2>About Me</h2>
+        <p>
+          I'm a Pre-Business student at BYU planning to major in Entrepreneurship.
+          I'm passionate about building something big that serves and benefits people. Currently,
+          I'm working as a professional life insurance broker working on building a successful sales team.
+        </p>
+        <a href="resume.html" class="btn btn-primary">View My Resume</a>
+      </div>
+    </div>
+  </div>
+  <div class="bg-light py-5">
+    <div class="container">
+      <h2 class="text-center mb-4">A Few Quick Facts</h2>
+      <div class="row text-center">
+        <div class="col-md-4 mb-3">
+          <h3>🎓</h3>
+          <p>Studying Pre-Business at Brigham Young University</p>
         </div>
-        <div class="col-lg-4 text-lg-end text-center">
-          <!-- CUSTOMIZE ME: replace this placeholder headshot with your
-               own photo. Drop a file (e.g. headshot.jpg) next to this
-               HTML file and change the src below to "headshot.jpg". -->
-          <img src="https://picsum.photos/seed/jordan-avery/400/400" alt="Placeholder headshot — replace with your own photo" class="profile-photo">
+        <div class="col-md-4 mb-3">
+          <h3>📈</h3>
+          <p>Focused on Entrepreneurship &amp; Sales</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h3>💡</h3>
+          <p>Always thinking about the next business idea</p>
         </div>
       </div>
     </div>
-  </header>
-
-  <!-- ============== ABOUT ============== -->
-  <section id="about">
+  </div>
+  <footer class="bg-dark text-white text-center py-4">
     <div class="container">
-      <div class="row g-5">
-        <div class="col-lg-5">
-          <div class="eyebrow mb-2">About</div>
-          <h2 class="mb-3" style="font-size:2rem;">A little about me</h2>
-        </div>
-        <div class="col-lg-7">
-          <!-- CUSTOMIZE ME: 2-3 short paragraphs about yourself. Keep it
-               specific — what you study, what you're curious about,
-               and one concrete thing you've made or worked on. -->
-          <p>
-            I'm a junior studying Computer Science, with a particular interest
-            in front-end development and turning messy data into something
-            people can actually read at a glance. Most of my coursework lives
-            in Python and JavaScript, but I'll reach for whatever tool fits
-            the problem.
-          </p>
-          <p>
-            Outside of class, I spend a fair amount of time reading about
-            space exploration — enough that I built an entire side project
-            around it (linked below, if you're curious). I'm currently
-            looking for internship opportunities where I can work on
-            real products with a small team.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============== WHAT I WORK WITH ============== -->
-  <section class="hairline" id="skills-preview">
-    <div class="container">
-      <div class="eyebrow mb-2">Toolkit</div>
-      <h2 class="mb-4" style="font-size:2rem;">What I work with</h2>
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card-clean">
-            <i class="bi bi-code-slash mb-3 d-block"></i>
-            <h3 class="h5">Languages</h3>
-            <div>
-              <span class="chip">JavaScript</span>
-              <span class="chip">Python</span>
-              <span class="chip">HTML / CSS</span>
-              <span class="chip">SQL</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card-clean">
-            <i class="bi bi-tools mb-3 d-block"></i>
-            <h3 class="h5">Tools</h3>
-            <div>
-              <span class="chip">Git / GitHub</span>
-              <span class="chip">VS Code</span>
-              <span class="chip">Bootstrap</span>
-              <span class="chip">Tableau</span>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card-clean">
-            <i class="bi bi-people mb-3 d-block"></i>
-            <h3 class="h5">Also good at</h3>
-            <div>
-              <span class="chip">Written communication</span>
-              <span class="chip">Debugging patience</span>
-              <span class="chip">Learning fast</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <p class="mt-4 text-muted">See the full breakdown, plus education and experience, on the <a href="resume.html">résumé page</a>.</p>
-    </div>
-  </section>
-
-  <!-- ============== PROJECTS ============== -->
-  <section class="hairline" id="projects">
-    <div class="container">
-      <div class="eyebrow mb-2">Projects</div>
-      <h2 class="mb-4" style="font-size:2rem;">A couple of things I've built</h2>
-      <div class="row g-4">
-        <div class="col-md-6">
-          <div class="card-clean">
-            <i class="bi bi-rocket-takeoff mb-3 d-block"></i>
-            <h3 class="h5">Space Explorer web app</h3>
-            <p class="text-muted mb-0">
-              <!-- CUSTOMIZE ME: this links to your small AI-assisted web
-                   app. Update the description to match whatever you
-                   actually built. -->
-              A small single-page app that pulls live data from NASA's
-              open APIs — the Astronomy Picture of the Day and Mars rover
-              photos — built with vanilla JavaScript.
-            </p>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="card-clean">
-            <i class="bi bi-bar-chart-line mb-3 d-block"></i>
-            <h3 class="h5">Class project, semester two</h3>
-            <p class="text-muted mb-0">
-              <!-- CUSTOMIZE ME: swap in a real second project, or remove
-                   this card if you only want to feature one. -->
-              Description of another project you're proud of goes here —
-              a class assignment, a personal script, anything you'd want
-              a recruiter to notice.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============== CONTACT ============== -->
-  <section class="hairline" id="contact">
-    <div class="container">
-      <div class="eyebrow mb-2">Get in touch</div>
-      <h2 class="mb-3" style="font-size:2rem;">Contact</h2>
-      <p class="text-muted" style="max-width:36rem;">
-        <!-- CUSTOMIZE ME: this whole section is optional — the assignment
-             does not require contact info. Delete it if you'd rather not
-             include it, or fill in real details below. -->
-        The easiest way to reach me is by email. I'm also on GitHub and
-        LinkedIn — links in the footer.
-      </p>
-      <a href="mailto:jordan.avery@example.edu" class="btn btn-accent px-4 py-2">jordan.avery@example.edu</a>
-    </div>
-  </section>
-
-  <!-- ============== FOOTER ============== -->
-  <footer>
-    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-      <div>&copy; 2026 Jordan Avery. Built with HTML, CSS, and Bootstrap.</div>
-      <div>
-        <!-- CUSTOMIZE ME: point these at your real profiles. Broken or
-             placeholder social links are an easy way to lose points, so
-             don't leave these as-is if you keep them. -->
-        <a href="https://github.com" target="_blank" rel="noopener" aria-label="GitHub"><i class="bi bi-github"></i></a>
-        <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
-        <a href="mailto:jordan.avery@example.edu" aria-label="Email"><i class="bi bi-envelope"></i></a>
-      </div>
+      <p class="mb-2">Let's connect:</p>
+      <a href="mailto:hcs1010001@gmail.com" class="text-white me-3">hcs1010001@gmail.com</a>
+      <a href="tel:6232195936" class="text-white">(623) 219-5936</a>
+      <p class="mt-3 mb-0">&copy; 2026 Heber Shaeffer</p>
     </div>
   </footer>
 
